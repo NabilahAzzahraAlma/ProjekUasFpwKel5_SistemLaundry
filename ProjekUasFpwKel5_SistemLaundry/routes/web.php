@@ -28,23 +28,9 @@ Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('or
 Route::post('/orders/{id}/verify', [OrderController::class, 'verify'])->name('orders.verify');
 
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-Route::post('/orders/{id}/verify', [OrderController::class, 'verify'])->name('orders.verify');
-Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
+Route::patch('/orders/{id}/verify', [OrderController::class, 'verify'])->name('orders.verify');
+Route::patch('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
 Route::get('/orders/verified', [OrderController::class, 'verified'])->name('orders.verified');
 // Tambahkan resource route
 Route::resource('orders', OrderController::class);
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profil', [UserController::class, 'index'])->name('user.profile');
-    Route::get('/profil/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::post('/profil/update', [UserController::class, 'update'])->name('user.update');
-
-    Route::get('/profil/password', [UserController::class, 'changePassword'])->name('user.changePassword');
-    Route::post('/profil/password/update', [UserController::class, 'updatePassword'])->name('user.updatePassword');
-
-    // Admin only
-    Route::middleware('can:isAdmin')->group(function () {
-        Route::get('/admin/users', [UserController::class, 'listUsers'])->name('admin.users.index');
-        Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-    });
-});
