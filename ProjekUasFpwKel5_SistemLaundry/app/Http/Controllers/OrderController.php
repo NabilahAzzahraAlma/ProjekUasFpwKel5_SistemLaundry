@@ -65,35 +65,53 @@ class OrderController extends Controller
         return view('orders.create', compact('categories', 'perfumes'));
     }
 
-    // (PERBARUI METHOD INI)
     public function store(Request $request)
     {
-        // Validasi data (Opsional tapi sangat disarankan)
         $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'category' => 'required|string',
+            'customer_name'   => 'required|string|max:255',
+            'category'        => 'required|string',
             'perfume_variant' => 'required|string',
-            'quantity' => 'required|numeric|min:1',
-            'total_price' => 'required|numeric|min:0',
+            'quantity'        => 'required|numeric|min:1',
+            'total_price'     => 'required|numeric|min:0',
+            'payment_method'  => 'required|string', // tambahkan validasi jika memang dipakai
         ]);
 
-        Order::create([
-            'order_code'     => 'ORD-' . strtoupper(uniqid()),
-            'customer_name'  => $request->customer_name,
-            'product_name'   => $request->category . ' - ' . $request->perfume_variant,
-            'quantity'       => $request->quantity,
-            'total_price'    => $request->total_price,
-            'order_date'     => now(),
-            'status'         => 'Pending', // Pastikan status ini sama dengan di query 'index'
+        // Buat order baru
+        $order = Order::create([
+            'user_id'       => Auth::id(),
+            'order_code'    => 'ORD-' . strtoupper(uniqid()),
+            'customer_name' => $request->customer_name,
+            'product_name'  => $request->category . ' - ' . $request->perfume_variant,
+            'quantity'      => $request->quantity,
+            'total_price'   => $request->total_price,
+            'order_date'    => now(),
+            'status'        => 'Pending',
+            'payment_method' => $request->payment_method,
         ]);
 
-        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil ditambahkan!');
+        // Buat pembayaran otomatis
+        $order->pembayaran()->create([
+            'metode'          => $request->payment_method,
+            'jumlah'          => $order->total_price,
+            'status'          => 'pending',
+            'order_code'      => $order->order_code,
+            'kode_qr'         => $request->payment_method === 'qris'
+                ? asset('img/qris_images.png') . $order->order_code
+                : null,
+            'virtual_account' => $request->payment_method === 'va'
+                ? '1234567890123456'
+                : null,
+        ]);
+
+        return redirect()->route('orders.index')->with('success', 'Pesanan dan pembayaran berhasil ditambahkan!');
     }
+
 
     public function dashboard()
     {
         $userId = Auth::id();
-        $pesananTerbaru = $userId ? Order::where('user_id', $userId)->latest()->first() : null;
+        // $pesananTerbaru = $userId ? Order::where('user_id', $userId)->latest()->first() : null;
+        $pesananTerbaru = Order::where('user_id', Auth::id())->latest()->first();
         return view('pelanggan.dashboard', compact('pesananTerbaru'));
     }
 }

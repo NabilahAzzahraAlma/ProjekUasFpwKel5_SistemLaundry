@@ -9,10 +9,9 @@
     <div class="card p-3 mb-3">
         <h5>Status Laundry Terbaru</h5>
         @if ($pesananTerbaru)
-            <p><strong>Kode:</strong> {{ $pesananTerbaru->kode_pesanan }}</p>
-            <p><strong>Status:</strong> {{ ucfirst($pesananTerbaru->status) }}</p>
-            <p><a href="{{ route('pelanggan.pesanan.show', $pesananTerbaru->id) }}"
-                    class="btn btn-outline-primary btn-sm">Lihat Detail</a></p>
+            <p>Kode Pesanan: {{ $pesananTerbaru->order_code }}</p>
+            <p>Status: {{ ucfirst($pesananTerbaru->status) }}</p>
+            <a href="{{ route('pembayaran.show', $pesananTerbaru->id) }}" class="btn btn-success">Bayar Sekarang</a>
         @else
             <p>Belum ada pesanan. <a href="{{ route('pelanggan.pesanan.create') }}">Buat sekarang</a>.</p>
         @endif

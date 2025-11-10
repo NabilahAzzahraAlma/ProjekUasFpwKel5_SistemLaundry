@@ -8,7 +8,9 @@
     <div class="card mb-3">
         <div class="card-body">
             <p><strong>Produk:</strong> {{ $order->product_name }}</p>
-            <p><strong>Jumlah Bayar:</strong> Rp {{ number_format($order->pembayaran->jumlah, 0, ',', '.') }}</p>
+            <p><strong>Jumlah Bayar:</strong>
+                Rp {{ number_format(optional($order->pembayaran)->jumlah ?? 0, 0, ',', '.') }}
+            </p>
             <p><strong>Metode:</strong> {{ strtoupper($order->pembayaran->metode) }}</p>
             <p><strong>Status:</strong>
                 <span class="badge bg-{{ $order->pembayaran->status == 'lunas' ? 'success' : 'warning' }}">
