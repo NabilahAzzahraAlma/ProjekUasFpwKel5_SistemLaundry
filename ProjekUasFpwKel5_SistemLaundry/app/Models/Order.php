@@ -19,4 +19,9 @@ class Order extends Model
         'status',
         'payment_method'
     ];
+
+    public function pembayaran()
+    {
+        return $this->hasOne(Pembayaran::class, 'order_code', 'order_code');
+    }
 }

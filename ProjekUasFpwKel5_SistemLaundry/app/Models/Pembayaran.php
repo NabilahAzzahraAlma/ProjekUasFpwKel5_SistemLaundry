@@ -18,15 +18,11 @@ class Pembayaran extends Model
         'status'
     ];
 
-    /**
-     * Relasi ke Order
-     * - foreign key: order_code (di tabel pembayaran)
-     * - owner key: order_code (di tabel order)
-     */
-    public function pesanan()
+    public function order()
     {
         return $this->belongsTo(Order::class, 'order_code', 'order_code');
     }
+
 
     /**
      * Helper untuk menampilkan link QR statis
@@ -34,6 +30,6 @@ class Pembayaran extends Model
     public function getQrLinkAttribute()
     {
         return $this->kode_qr
-            ?? 'https://via.placeholder.com/200x200.png?text=QR+' . $this->pesanan->order_code;
+            ?? asset('img/qris_images.png') . $this->order->order_code;
     }
 }

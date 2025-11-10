@@ -5,10 +5,21 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Authentication Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Registration Routes
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);
 // GET - Untuk MENAMPILKAN form (ini sudah Anda miliki)
 Route::get('/orders/create', [OrderController::class, 'create']);
 
@@ -50,23 +61,28 @@ Route::get('/dashboard', function () {
     };
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/pembayaran/{order}', [PembayaranController::class, 'show'])
+    ->name('pembayaran.show');
+Route::post('/pembayaran/{orderId}/konfirmasi-driver', [PembayaranController::class, 'konfirmasiOlehDriver'])->name('pembayaran.konfirmasiDriver');
+Route::post('/pembayaran/{orderId}/mark-paid', [PembayaranController::class, 'customerMarkPaid'])
+    ->name('pembayaran.customerMarkPaid');
 
-Route::middleware(['auth'])->group(function () {
-    // Pelanggan
-    Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
-        // Halaman pembayaran
-        Route::get('/pembayaran/{order}', [PembayaranController::class, 'show'])
-            ->name('pembayaran.show');
+// Route::middleware(['auth'])->group(function () {
+// Pelanggan
+Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
+    // Halaman pembayaran
+    Route::get('/pembayaran/{order}', [PembayaranController::class, 'show'])
+        ->name('pembayaran.show');
 
-        // Pelanggan tandai lunas (simulasi)
-        Route::post('/pembayaran/{order}/mark-paid', [PembayaranController::class, 'customerMarkPaid'])
-            ->name('pembayaran.customerMarkPaid');
-    });
-
-    // Driver
-    Route::prefix('driver')->name('driver.')->group(function () {
-        // Driver konfirmasi pembayaran selesai
-        Route::post('/pembayaran/{order}/confirm', [PembayaranController::class, 'konfirmasiOlehDriver'])
-            ->name('pembayaran.konfirmasiDriver');
-    });
+    // Pelanggan tandai lunas (simulasi)
+    Route::post('/pembayaran/{order}/mark-paid', [PembayaranController::class, 'customerMarkPaid'])
+        ->name('pembayaran.customerMarkPaid');
 });
+
+// Driver
+Route::prefix('driver')->name('driver.')->group(function () {
+    // Driver konfirmasi pembayaran selesai
+    Route::post('/pembayaran/{order}/confirm', [PembayaranController::class, 'konfirmasiOlehDriver'])
+        ->name('pembayaran.konfirmasiDriver');
+});
+// });

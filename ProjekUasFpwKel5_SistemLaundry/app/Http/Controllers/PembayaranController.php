@@ -10,36 +10,33 @@ use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        //Display a listing of the resource.
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        //Show the form for creating a new resource.
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        //Store a newly created resource in storage.
     }
 
     // Menampilkan halaman pembayaran pelanggan
     public function show($orderId)
     {
         $order = Order::with('pembayaran')->findOrFail($orderId);
+
+        if (!$order->pembayaran) {
+            return back()->with('error', 'Pembayaran belum tersedia untuk order ini.');
+        }
+
         return view('pelanggan.pembayaran', compact('order'));
     }
+
 
     // Simulasi: pelanggan menandai pembayaran lunas
     public function customerMarkPaid($orderId)
@@ -76,22 +73,17 @@ class PembayaranController extends Controller
 
     public function pembayaran($orderId)
     {
-        return Pembayaran::where('order_id', $orderId)->first();
+        $order = Order::findOrFail($orderId);
+        return $order->pembayaran;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        //update the specified resource in storage.
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        //Remove the specified resource from storage.
     }
 }
