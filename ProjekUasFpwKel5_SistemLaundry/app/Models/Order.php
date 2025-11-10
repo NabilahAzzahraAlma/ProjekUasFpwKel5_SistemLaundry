@@ -13,6 +13,8 @@ class Order extends Model
         'order_code',
         'customer_name',
         'product_name',
+        'quantity',
+        'total_price',
         'order_date',
         'status',
         'payment_method'

@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -19,7 +21,7 @@ class OrderController extends Controller
     public function verified()
     {
         $orders = Order::where('status', 'Terverifikasi')->paginate(5);
-         // Pastikan view-nya ada di resources/views/orders/verified.blade.php
+        // Pastikan view-nya ada di resources/views/orders/verified.blade.php
         return view('orders.verified', compact('orders'));
     }
 
@@ -45,10 +47,15 @@ class OrderController extends Controller
 
     public function create()
     {
-         // Daftar kategori jasa
+        // Daftar kategori jasa
         $categories = [
-            'Cuci Baju', 'Cuci Tas', 'Cuci BedCover', 'Cuci Jaket',
-            'Cuci Boneka', 'Cuci Karpet', 'Cuci Gorden'
+            'Cuci Baju',
+            'Cuci Tas',
+            'Cuci BedCover',
+            'Cuci Jaket',
+            'Cuci Boneka',
+            'Cuci Karpet',
+            'Cuci Gorden'
         ];
 
         // Daftar varian parfum
@@ -74,12 +81,19 @@ class OrderController extends Controller
             'order_code'     => 'ORD-' . strtoupper(uniqid()),
             'customer_name'  => $request->customer_name,
             'product_name'   => $request->category . ' - ' . $request->perfume_variant,
-            'quantity'       => $request->quantity,    // (BARU)
-            'total_price'    => $request->total_price, // (BARU)
+            'quantity'       => $request->quantity,
+            'total_price'    => $request->total_price,
             'order_date'     => now(),
             'status'         => 'Pending', // Pastikan status ini sama dengan di query 'index'
         ]);
 
         return redirect()->route('orders.index')->with('success', 'Pesanan berhasil ditambahkan!');
+    }
+
+    public function dashboard()
+    {
+        $userId = Auth::id();
+        $pesananTerbaru = $userId ? Order::where('user_id', $userId)->latest()->first() : null;
+        return view('pelanggan.dashboard', compact('pesananTerbaru'));
     }
 }

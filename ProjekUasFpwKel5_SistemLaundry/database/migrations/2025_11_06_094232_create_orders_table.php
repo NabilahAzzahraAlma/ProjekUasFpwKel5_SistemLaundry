@@ -9,16 +9,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-       Schema::create('orders', function (Blueprint $table) {
-    $table->id();
-    $table->string('order_code');
-    $table->string('customer_name');
-    $table->string('product_name');
-    // $table->date('order_date');  ❌ HAPUS baris ini
-    $table->string('status')->default('Pending');
-    $table->timestamps();
-});
-
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->string('order_code')->unique();
+            $table->string('customer_name');
+            $table->string('product_name');
+            $table->integer('quantity');
+            $table->decimal('total_price');
+            $table->timestamp('order_date');
+            $table->string('status')->default('Pending');
+            $table->timestamps();
+        });
     }
 
     public function down(): void
