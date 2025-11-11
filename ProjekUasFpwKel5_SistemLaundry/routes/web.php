@@ -7,11 +7,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\UserDashboardController;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+});
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
