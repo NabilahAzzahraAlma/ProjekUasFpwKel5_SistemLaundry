@@ -86,3 +86,25 @@ Route::prefix('driver')->name('driver.')->group(function () {
         ->name('pembayaran.konfirmasiDriver');
 });
 // });
+
+
+
+
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\StaffController;
+
+// Route untuk pelanggan
+Route::middleware(['auth', 'role:pelanggan'])->group(function () {
+    Route::get('/pelanggan/status', [OrderController::class, 'status'])->name('pelanggan.status');
+});
+
+// Route untuk staff
+// Route::middleware(['auth', 'role:staff'])->group(function () {
+//     Route::get('/staff/riwayat', [StaffController::class, 'riwayat'])->name('staff.riwayat');
+//     Route::get('/staff/status', [StaffController::class, 'status'])->name('staff.status');
+// });
+Route::get('/staff/riwayat', [StaffController::class, 'riwayat'])->name('staff.riwayat');
+Route::get('/staff/status', [StaffController::class, 'index'])->name('staff.status.index');
+
+
+Route::post('/staff/status/{id}', [StaffController::class, 'status'])->name('staff.status');
