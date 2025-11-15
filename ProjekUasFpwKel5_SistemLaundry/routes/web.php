@@ -8,7 +8,10 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\StaffController;
 
 // Maaf ya ini di comment dlu mau ngetes
 // Route::get('/', function () {
@@ -106,12 +109,6 @@ Route::prefix('driver')->name('driver.')->group(function () {
 });
 // });
 
-
-
-
-use App\Http\Controllers\PesananController;
-use App\Http\Controllers\StaffController;
-
 // Route untuk pelanggan
 Route::middleware(['auth', 'role:pelanggan'])->group(function () {
     Route::get('/pelanggan/status', [OrderController::class, 'status'])->name('pelanggan.status');
@@ -127,3 +124,7 @@ Route::get('/staff/status', [StaffController::class, 'index'])->name('staff.stat
 
 
 Route::post('/staff/status/{id}', [StaffController::class, 'status'])->name('staff.status');
+
+Route::post('/complaint', [ComplaintController::class, 'store'])->name('complaint.store');
+Route::get('/admin/complaints', [ComplaintController::class, 'showAdmin'])->name('admin.complaints');
+Route::post('/admin/complaints/{id}/{status}', [ComplaintController::class, 'verifyComplaint'])->name('admin.verify.complaint');

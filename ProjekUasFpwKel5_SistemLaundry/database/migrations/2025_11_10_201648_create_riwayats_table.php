@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('riwayats', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('pesanan_id');
-            $table->enum('tipe', ['Pemasukan', 'Pengeluaran']);
-            $table->decimal('jumlah', 10, 2);
-            $table->timestamps();
+        if (!Schema::hasTable('riwayats')) {
+            Schema::create('riwayats', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('pesanan_id');
+                $table->enum('tipe', ['Pemasukan', 'Pengeluaran']);
+                $table->decimal('jumlah', 10, 2);
+                $table->timestamps();
 
-            $table->foreign('pesanan_id')->references('id')->on('pesanans')->onDelete('cascade');
-        });
+                $table->foreign('pesanan_id')->references('id')->on('pesanans')->onDelete('cascade');
+            });
+        }
     }
 
     /**
