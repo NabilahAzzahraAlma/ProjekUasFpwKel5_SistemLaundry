@@ -1,47 +1,201 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Laundry App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* ====== GLOBAL LAYOUT (bg hijau daun + center) ====== */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #388e3c, #81c784); /* Hijau daun gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+        .login-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            max-width: 1200px;
+        }
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        /* ====== LOGIN FORM STYLING ====== */
+        .login-container {
+            background: white;
+            width: 45%;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        .login-container h1 {
+            margin-bottom: 25px;
+            color: #388e3c; /* Hijau daun */
+            font-size: 1.6em;
+            font-weight: 600;
+        }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        label {
+            display: block;
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 6px;
+        }
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+        input:focus {
+            outline: none;
+            border-color: #388e3c; /* Hijau daun */
+        }
+
+        /* ====== ACTIONS AND BUTTON ====== */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: -8px;
+            margin-bottom: 15px;
+        }
+
+        .actions a {
+            font-size: 0.85em;
+            color: #388e3c; /* Hijau daun */
+            text-decoration: none;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #fbc02d; /* Kuning */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 0;
+            width: 100%;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #f9a825; /* Kuning lebih gelap */
+        }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .register-link a {
+            color: #388e3c; /* Hijau daun */
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background: #ffcdd2;
+            color: #b71c1c;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        /* ====== Gambar Styling ====== */
+        .image-container {
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%; /* Membatasi lebar gambar agar pas dengan ukuran container */
+            height: auto; /* Menjaga rasio gambar tetap proporsional */
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .login-wrapper {
+                flex-direction: column;
+                width: 90%;
+            }
+            .login-container, .image-container {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Login Form -->
+        <div class="login-container">
+            <h1>Login Laundry App</h1>
+
+            @if ($errors->any())
+                <div class="error">{{ $errors->first() }}</div>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            <form method="POST" action="{{ url('/login') }}">
+                @csrf
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Masukkan email" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Masukkan password" required>
+                </div>
+
+                <div class="actions">
+                    <label>
+                        <input type="checkbox" name="remember"> Ingat saya
+                    </label>
+                    <a href="{{ route('password.request') }}">Lupa password?</a>
+                </div>
+
+                <button type="submit">Masuk</button>
+
+                <div class="register-link">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}">Daftar sekarang</a>
+                </div>
+            </form>
         </div>
-    </form>
-</x-guest-layout>
+
+        <!-- Image Container -->
+        <div class="image-container">
+            <img src="{{ asset('img/login view.jpg') }}" alt="Laundry Image">
+        </div>
+    </div>
+</body>
+</html>
