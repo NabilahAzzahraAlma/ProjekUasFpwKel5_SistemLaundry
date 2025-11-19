@@ -12,6 +12,7 @@ use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ReportController;
 
 // Maaf ya ini di comment dlu mau ngetes
 // Route::get('/', function () {
@@ -19,6 +20,9 @@ use App\Http\Controllers\StaffController;
 // });
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+    Route::get('/laporan-harian', [ReportController::class, 'index'])->name('reports.daily');
+    Route::get('/laporan-harian/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
 // Authentication Routes
