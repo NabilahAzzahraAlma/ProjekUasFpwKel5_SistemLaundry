@@ -76,7 +76,7 @@ Route::get('/dashboard', function () {
 
     return match ($user->role) {
         'pelanggan' => redirect()->route('pelanggan.pesanan.index'),
-        'admin', 'staf' => redirect()->route('admin.dashboard'),
+        'admin', 'staff' => redirect()->route('admin.dashboard'),
         'owner' => redirect()->route('admin.laporan'),
         'driver' => redirect()->route('driver.dashboard'),
         default => redirect()->route('login'),
@@ -109,10 +109,22 @@ Route::prefix('driver')->name('driver.')->group(function () {
 });
 // });
 
+
+
+
+
+
+// use App\Http\Controllers\StaffController;
+use App\Http\Controllers\PelangganController;
+
+
 // Route untuk pelanggan
 Route::middleware(['auth', 'role:pelanggan'])->group(function () {
     Route::get('/pelanggan/status', [OrderController::class, 'status'])->name('pelanggan.status');
 });
+Route::get('/status/{kode_pesanan}', [PelangganController::class, 'Status'])->name('status.pelanggan');
+Route::get('/pelanggan/status', [OrderController::class, 'status'])->name('pelanggan.status');
+
 
 // Route untuk staff
 // Route::middleware(['auth', 'role:staff'])->group(function () {
@@ -121,10 +133,10 @@ Route::middleware(['auth', 'role:pelanggan'])->group(function () {
 // });
 Route::get('/staff/riwayat', [StaffController::class, 'riwayat'])->name('staff.riwayat');
 Route::get('/staff/status', [StaffController::class, 'index'])->name('staff.status.index');
-
-
 Route::post('/staff/status/{id}', [StaffController::class, 'status'])->name('staff.status');
 
+
+// route untuk complaint
 Route::post('/complaint', [ComplaintController::class, 'store'])->name('complaint.store');
 Route::get('/admin/complaints', [ComplaintController::class, 'showAdmin'])->name('admin.complaints');
 Route::post('/admin/complaints/{id}/{status}', [ComplaintController::class, 'verifyComplaint'])->name('admin.verify.complaint');
