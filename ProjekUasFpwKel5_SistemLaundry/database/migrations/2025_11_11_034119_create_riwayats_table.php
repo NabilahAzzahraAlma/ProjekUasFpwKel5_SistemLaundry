@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('riwayats', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->string('status'); // contoh: "Diterima", "Proses", "Selesai"
-            $table->unsignedBigInteger('changed_by_id')->nullable(); // ID staff yang ubah
-            $table->string('changed_by_role')->nullable(); // contoh: "Staff", "Admin"
-            $table->text('notes')->nullable(); // catatan tambahan
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->string('status')->index(); // "Diterima", "Proses", "Selesai", "Ditolak"
+            $table->unsignedBigInteger('changed_by_id')->nullable()->index(); // ID user yang ubah
+            $table->string('changed_by_role')->nullable(); // "Staff", "Admin", "Driver"
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             // Relasi ke tabel orders

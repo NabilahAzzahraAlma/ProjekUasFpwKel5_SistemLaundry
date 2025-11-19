@@ -17,9 +17,11 @@ class StaffController extends Controller
         // Jika status selesai → catat ke riwayat
         if ($request->status === 'Selesai') {
             Riwayat::create([
-                'pesanan_id' => $order->id,
-                'tipe' => 'Pemasukan',
-                'jumlah' => $order->biaya,
+                'order_id' => $order->id,
+                'status' => 'Selesai',
+                'changed_by_id' => auth()->id() ?? 1,
+                'changed_by_role' => 'staff',
+                'notes' => 'Status selesai oleh staff'
             ]);
         }
 
@@ -33,4 +35,6 @@ class StaffController extends Controller
         $orders = Order::all();
         return view('staff.status', compact('orders'));
     }
+
+    
 }
