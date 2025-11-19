@@ -10,9 +10,11 @@ class Riwayat extends Model
 
     // Kolom yang bisa diisi mass-assignment
     protected $fillable = [
-        'pesanan_id',
-        'tipe',     // Pemasukan / Pengeluaran
-        'jumlah',
+        'order_id',
+        'status',     
+        'changed_by_id',
+        'changed_by_role',
+        'notes'
     ];
 
     // Relasi ke Pesanan
@@ -20,6 +22,7 @@ class Riwayat extends Model
     {
         return $this->belongsTo(Order::class);
     }
+    
 // Method untuk menampilkan riwayat di halaman staff
     public function riwayat()
     {

@@ -24,4 +24,21 @@ class Order extends Model
     {
         return $this->hasOne(Pembayaran::class, 'order_code', 'order_code');
     }
+
+    public function riwayats()
+    {
+        return $this->hasMany(Riwayat::class);
+    }
+
+    const STATUS_PENDING = 'Pending';
+    const STATUS_DITERIMA = 'Diterima';
+    const STATUS_PROSES = 'Proses';
+    const STATUS_DICUCI = 'Dicuci';
+    const STATUS_DIANTAR = 'Diantar';
+    const STATUS_SELESAI = 'Selesai';
+    const STATUS_VERIFIED = 'Terverifikasi';
+    const STATUS_REJECTED = 'Ditolak';
+
+    
+
 }
