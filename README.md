@@ -6,10 +6,11 @@ Sistem Laundry KangCuciExpress adalah proyek Ujian Akhir Semester mata kuliah Fr
 
 - Pemesanan layanan laundry online (kiloan, setrika, sepatu, dll)
 - Pelacakan status cucian real-time
-- Pembayaran digital terintegrasi (QRIS, VA, tunai)
-- Dashboard admin untuk laporan harian dan manajemen layanan
-- Fitur driver untuk rute pickup dan pengantaran
-- Modul komplain pelanggan langsung dari website
+- Pembayaran digital informasi statis dan konfirmasi petugas (QRIS, VA, tunai)
+- Dashboard admin untuk laporan transaksi dan manajemen layanan
+- Dashboard Client order, status,dan komplain.
+- Fitur tugas antar profil driver
+- Fitur komplain pelanggan langsung dari website
 
 #### 🛠️ Teknologi:
 
@@ -23,9 +24,3 @@ Sistem Laundry KangCuciExpress adalah proyek Ujian Akhir Semester mata kuliah Fr
 - N.A Alma
 - Marsya T.N
 - Raffi N.F
-
-lakukan
-composer install
-npm install
-composer require maatwebsite/excel
-php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider" --tag=config
